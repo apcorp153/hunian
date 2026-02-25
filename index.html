@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Properti AP Corp</title>
+    <meta name="description" content="Katalog properti terbaik, ruko, gudang, dan kantor tersedia di AP Corp.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root { --primary-color: #2c3e50; }
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar { background-color: var(--primary-color) !important; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .card { border: none; border-radius: 12px; transition: 0.3s; height: 100%; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.12); }
+        .img-container { height: 220px; border-radius: 12px 12px 0 0; overflow: hidden; }
+        .img-container img { object-fit: cover; width: 100%; height: 100%; }
+        .price-tag { color: #e74c3c; font-weight: bold; font-size: 1.2rem; }
+        .btn-wa { background-color: #25d366; color: white; font-weight: 600; border-radius: 8px; }
+        .btn-wa:hover { background-color: #128c7e; color: white; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark mb-5">
+    <div class="container text-center">
+        <span class="navbar-brand mb-0 h1 mx-auto">AP CORP PROPERTY LISTING</span>
+    </div>
+</nav>
+
+<div class="container">
+    <div id="loading" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">Mengambil data properti terbaru...</p>
+    </div>
+
+    <div id="catalog" class="row g-4">
+        </div>
+</div>
+
+<footer class="text-center py-5 mt-5 text-muted border-top">
+    &copy; 2026 AP Corp Property - Made with GitHub & Google Sheets
+</footer>
+
+<script>
+    // GANTI URL INI dengan URL Web App (GAS) lu yang baru (API)
+    const API_URL = "URL_WEB_APP_GAS_LU";
+
+    async function fetchData() {
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            renderData(data);
+        } catch (error) {
+            console.error("Gagal ambil data:", error);
+            document.getElementById('loading').innerHTML = "Gagal memuat data. Pastikan URL API benar.";
+        }
+    }
+
+    function renderData(data) {
+        const container = document.getElementById('catalog');
+        const loader = document.getElementById('loading');
+        loader.style.display = 'none';
+        
+        data.forEach(item => {
+            const card = `
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="img-container">
+                            <img src="${item.Link_Foto}" alt="${item.Nama_Properti}" onerror="this.src='https://via.placeholder.com/400x300?text=Foto+Tidak+Ada'">
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="badge bg-info text-dark">${item.Kategori || 'Properti'}</span>
+                                <span class="badge ${item.Status === 'Tersedia' ? 'bg-success' : 'bg-danger'}">${item.Status}</span>
+                            </div>
+                            <h5 class="card-title text-dark">${item.Nama_Properti}</h5>
+                            <p class="text-muted small"><i class="bi bi-geo-alt"></i> ${item.Lokasi}</p>
+                            <p class="price-tag">${item.Harga}</p>
+                            <p class="card-text text-secondary small">${item.Deskripsi.substring(0, 100)}...</p>
+                            <div class="d-grid mt-3">
+                                <a href="https://wa.me/628123456789?text=Halo, saya tertarik dengan ${item.Nama_Properti}" class="btn btn-wa" target="_blank">Tanya via WhatsApp</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += card;
+        });
+    }
+
+    fetchData();
+</script>
+
+</body>
+</html>

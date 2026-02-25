@@ -194,19 +194,23 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbzCrNX6mtDRz_IBqCXhwWx_YKZTrYgIILx_mGyWEKFZckzTls58MRgjh2yE42m3ZDdg/exec";
 
     async function fetchData() {
-        try {
-            const response = await fetch(API_URL);
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-            renderData(data);
-        } catch (e) {
-            console.error("Fetch error:", e);
-            const loader = document.getElementById('loading');
-            if (loader) {
-                loader.innerHTML = `<p class="text-danger">Gagal mengambil data. Pastikan Google Script sudah di-deploy sebagai 'Anyone'.</p>`;
-            }
+    try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        
+        // Cek apakah data ini beneran array atau malah object error
+        if (data.error) {
+            console.error("Script Error:", data.error);
+            document.getElementById('loading').innerHTML = `<p class="text-danger">Google Script Error: ${data.error}</p>`;
+            return;
         }
+        
+        renderData(data);
+    } catch (e) {
+        console.error("Fetch Error:", e);
+        document.getElementById('loading').innerHTML = `<p class="text-danger">Gagal terhubung ke data. Pastikan Deployment sudah 'Anyone'.</p>`;
     }
+}
 
     function renderData(data) {
     const container = document.getElementById('catalog');

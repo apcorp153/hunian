@@ -209,62 +209,61 @@
     }
 
     function renderData(data) {
-        const container = document.getElementById('catalog');
-        if (!container) return; // Pelindung jika element catalog tidak ditemukan
+    const container = document.getElementById('catalog');
+    const loader = document.getElementById('loading');
+    
+    if (loader) loader.style.display = 'none';
+    if (!container) return;
 
-        container.innerHTML = ''; // Hapus isi loading
-        
-        data.forEach(item => {
-            // Logika Harga
-            const hargaJual = item.Harga_Jual ? "Rp " + parseInt(item.Harga_Jual).toLocaleString('id-ID') : "";
-            const hargaSewa = item.Harga_Sewa ? "Rp " + parseInt(item.Harga_Sewa).toLocaleString('id-ID') : "";
-            const displayHarga = hargaJual || hargaSewa || item.Harga || "Hubungi Kami";
-
-            container.innerHTML += `
-                <div class="col">
-                    <div class="card-custom">
-                        <div class="image-container">
-                            <div class="status-tag">${item.Status || 'DIJUAL'}</div>
-                            <img src="${item.Link_Foto}" alt="${item.Nama_Properti}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop'">
-                        </div>
-
-                        <div class="content">
-                            <h2 class="title">${item.Nama_Properti || 'Tanpa Nama'}</h2>
-                            
-                            <div class="specs">
-                                <div class="spec-item"><i data-lucide="maximize" size="18"></i>${item.Luas_Tanah || '-'}m²</div>
-                                <div class="spec-item"><i data-lucide="home" size="18"></i>${item.Luas_Bangunan || '-'}m²</div>
-                                <div class="spec-item"><i data-lucide="bed-double" size="18"></i>${item.Kamar_Tidur || '0'}</div>
-                                <div class="spec-item"><i data-lucide="bath" size="18"></i>${item.Kamar_Mandi || '0'}</div>
-                                <div class="spec-item"><i data-lucide="compass" size="18"></i>${item.Arah_Hadap || '-'}</div>
-                            </div>
-                            
-                            <p class="description">${item.Deskripsi ? item.Deskripsi.substring(0, 80) + '...' : 'Hunian strategis siap huni di lokasi premium.'}</p>
-
-                            <div class="footer-price">
-                                <span class="price-label">Harga Penawaran</span>
-                                <span class="price-value">${displayHarga}</span>
-                            </div>
-
-                            <div class="action-buttons">
-                                <a href="detail.html?nama=${encodeURIComponent(item.Nama_Properti)}" class="btn-custom btn-detail">
-                                    <i data-lucide="eye" size="18"></i> Detail
-                                </a>
-                                <a href="https://wa.me/628123456789?text=Halo, saya tertarik dengan ${item.Nama_Properti}" class="btn-custom btn-wa" target="_blank">
-                                    <i data-lucide="message-circle" size="18"></i> WhatsApp
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-        });
-        
-        // Render ulang icon Lucide setelah HTML dimasukkan
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
+    // PENGAMAN: Cek apakah data benar-benar sebuah Array
+    if (!Array.isArray(data)) {
+        console.error("Data bukan array:", data);
+        container.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <p class="text-danger">Format data salah. Pastikan Google Script mengembalikan Array.</p>
+                <code class="small text-muted">${JSON.stringify(data)}</code>
+            </div>`;
+        return;
     }
 
+    container.innerHTML = ''; 
+    
+    data.forEach(item => {
+        // ... sisa kode looping lu tetap sama ...
+        const hargaJual = item.Harga_Jual ? "Rp " + parseInt(item.Harga_Jual).toLocaleString('id-ID') : "";
+        const hargaSewa = item.Harga_Sewa ? "Rp " + parseInt(item.Harga_Sewa).toLocaleString('id-ID') : "";
+        const displayHarga = hargaJual || hargaSewa || item.Harga || "Hubungi Kami";
+
+        container.innerHTML += `
+            <div class="col">
+                <div class="card-custom">
+                    <div class="image-container">
+                        <div class="status-tag">${item.Status || 'DIJUAL'}</div>
+                        <img src="${item.Link_Foto}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop'">
+                    </div>
+                    <div class="content">
+                        <h2 class="title">${item.Nama_Properti || 'Tanpa Nama'}</h2>
+                        <div class="specs">
+                            <div class="spec-item"><i data-lucide="maximize" size="18"></i>${item.Luas_Tanah || '-'}m²</div>
+                            <div class="spec-item"><i data-lucide="home" size="18"></i>${item.Luas_Bangunan || '-'}m²</div>
+                            <div class="spec-item"><i data-lucide="bed-double" size="18"></i>${item.Kamar_Tidur || '0'}</div>
+                            <div class="spec-item"><i data-lucide="bath" size="18"></i>${item.Kamar_Mandi || '0'}</div>
+                        </div>
+                        <div class="footer-price">
+                            <span class="price-label">Harga Penawaran</span>
+                            <span class="price-value">${displayHarga}</span>
+                        </div>
+                        <div class="action-buttons">
+                            <a href="detail.html?nama=${encodeURIComponent(item.Nama_Properti)}" class="btn-custom btn-detail">Detail</a>
+                            <a href="https://wa.me/628123456789" class="btn-custom btn-wa">WhatsApp</a>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    });
+    
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
     // Jalankan
     fetchData();
 </script>

@@ -3,95 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hunian153</title>
-    <meta name="description" content="Katalog properti terbaik, ruko, gudang, dan kantor tersedia di AP Corp.">
+    <title>AP Corp - Hunian Premium</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --primary-color: #2c3e50; }
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .navbar { background-color: var(--primary-color) !important; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .card { border: none; border-radius: 12px; transition: 0.3s; height: 100%; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.12); }
-        .img-container { height: 220px; border-radius: 12px 12px 0 0; overflow: hidden; }
-        .img-container img { object-fit: cover; width: 100%; height: 100%; }
-        .price-tag { color: #e74c3c; font-weight: bold; font-size: 1.2rem; }
-        .btn-wa { background-color: #25d366; color: white; font-weight: 600; border-radius: 8px; }
-        .btn-wa:hover { background-color: #128c7e; color: white; }
+        :root {
+            --primary-blue: #1e3a8a;
+            --secondary-gray: #64748b;
+            --whatsapp-green: #25d366;
+            --detail-blue: #3b82f6;
+            --tag-green: #065f46;
+            --bg-light: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        /* Hero Header */
+        .hero {
+            background: var(--primary-blue);
+            color: white;
+            padding: 60px 0 100px 0;
+            text-align: center;
+            border-radius: 0 0 40px 40px;
+        }
+
+        /* Card Styling sesuai file TXT */
+        .card-custom {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            height: 100%;
+            border: none;
+        }
+
+        .card-custom:hover { transform: translateY(-8px); }
+
+        .image-container {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .status-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            color: white;
+            background: var(--tag-green);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .content { padding: 24px; }
+
+        .title {
+            margin: 0 0 12px 0;
+            font-size: 1.1rem;
+            color: #0f172a;
+            line-height: 1.4;
+            font-weight: 700;
+            height: 3rem;
+            overflow: hidden;
+        }
+
+        /* Justified Specs Row */
+        .specs {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 15px 0;
+            border-top: 1px solid #f1f5f9;
+            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 15px;
+        }
+
+        .spec-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--secondary-gray);
+            font-size: 0.65rem;
+            font-weight: 500;
+        }
+
+        .spec-item i { color: #94a3b8; }
+
+        .description {
+            font-size: 0.85rem;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            height: 3.2rem;
+            overflow: hidden;
+        }
+
+        .price-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--secondary-gray);
+            margin-bottom: 2px;
+        }
+
+        .price-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-custom {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 5px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+            color: white;
+        }
+
+        .btn-detail { background-color: var(--detail-blue); }
+        .btn-wa { background-color: var(--whatsapp-green); }
+        .btn-custom:hover { opacity: 0.9; transform: translateY(-2px); color: white; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-dark mb-5">
-    <div class="container text-center">
-        <span class="navbar-brand mb-0 h1 mx-auto">Hunian153</span>
+<div class="hero">
+    <div class="container">
+        <h1 class="fw-bold">AP CORP PROPERTY</h1>
+        <p class="opacity-75">Koleksi Hunian Exclusive Jual & Sewa</p>
     </div>
-</nav>
+</div>
 
-<div class="container">
-    <div id="loading" class="text-center my-5">
-        <div class="spinner-border text-primary" role="status"></div>
-        <p class="mt-2">Syncing...</p>
+<div class="container" style="margin-top: -50px;">
+    <div id="loading" class="text-center py-5">
+        <div class="spinner-border text-light" role="status"></div>
     </div>
 
     <div id="catalog" class="row g-4">
         </div>
 </div>
 
-<footer class="text-center py-5 mt-5 text-muted border-top">
-    &copy; 2026 Hunian153 - Made with GitHub & Google Sheets
-</footer>
-
 <script>
-    // GANTI URL INI dengan URL Web App (GAS) lu yang baru (API)
-    const API_URL = "https://script.google.com/macros/s/AKfycbzCrNX6mtDRz_IBqCXhwWx_YKZTrYgIILx_mGyWEKFZckzTls58MRgjh2yE42m3ZDdg/exec";
+    const API_URL = "URL_WEB_APP_GAS_LU"; // GANTI DENGAN URL GAS LU
 
     async function fetchData() {
         try {
             const response = await fetch(API_URL);
             const data = await response.json();
             renderData(data);
-        } catch (error) {
-            console.error("Gagal ambil data:", error);
-            document.getElementById('loading').innerHTML = "Gagal memuat data. Pastikan URL API benar.";
+        } catch (e) {
+            console.error(e);
+            document.getElementById('loading').innerHTML = "Gagal memuat data.";
         }
     }
 
     function renderData(data) {
         const container = document.getElementById('catalog');
-        const loader = document.getElementById('loading');
-        loader.style.display = 'none';
+        document.getElementById('loading').style.display = 'none';
+        container.innerHTML = '';
         
         data.forEach(item => {
-            const card = `
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="img-container">
-                            <img src="${item.Link_Foto}" alt="${item.Nama_Properti}" onerror="this.src='https://via.placeholder.com/400x300?text=Foto+Tidak+Ada'">
+            // Logika format harga angka ke ribuan (Rp)
+            const hargaJual = item.Harga_Jual ? "Rp " + parseInt(item.Harga_Jual).toLocaleString('id-ID') : "";
+            const hargaSewa = item.Harga_Sewa ? "Rp " + parseInt(item.Harga_Sewa).toLocaleString('id-ID') : "";
+            const displayHarga = hargaJual || hargaSewa || item.Harga || "Hubungi Kami";
+
+            container.innerHTML += `
+                <div class="col-md-6 col-lg-4">
+                    <div class="card-custom">
+                        <div class="image-container">
+                            <div class="status-tag">${item.Status || 'FOR SALE'}</div>
+                            <img src="${item.Link_Foto}" alt="${item.Nama_Properti}" onerror="this.src='https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop'">
                         </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="badge bg-info text-dark">${item.Kategori || 'Properti'}</span>
-                                <span class="badge ${item.Status === 'Tersedia' ? 'bg-success' : 'bg-danger'}">${item.Status}</span>
-                            </div>
-                            <h5 class="card-title text-dark">${item.Nama_Properti}</h5>
-                            <p class="text-muted small"><i class="bi bi-geo-alt"></i> ${item.Lokasi}</p>
-                            <p class="price-tag">${item.Harga}</p>
-                            <p class="card-text text-secondary small">${item.Deskripsi.substring(0, 100)}...</p>
+
+                        <div class="content">
+                            <h2 class="title">${item.Nama_Properti}</h2>
                             
-                            <div class="d-grid gap-2 mt-3">
-                                <a href="detail.html?nama=${encodeURIComponent(item.Nama_Properti)}" class="btn btn-outline-primary btn-sm">Detail Properti</a>
-                                <a href="https://wa.me/628123456789?text=Halo, saya tertarik dengan ${item.Nama_Properti}" class="btn btn-wa" target="_blank">Tanya via WhatsApp</a>
+                            <div class="specs">
+                                <div class="spec-item">
+                                    <i data-lucide="maximize" size="16"></i>
+                                    ${item.Luas_Tanah || '-'} m²
+                                </div>
+                                <div class="spec-item">
+                                    <i data-lucide="home" size="16"></i>
+                                    ${item.Luas_Bangunan || '-'} m²
+                                </div>
+                                <div class="spec-item">
+                                    <i data-lucide="bed-double" size="16"></i>
+                                    ${item.Kamar_Tidur || '0'}
+                                </div>
+                                <div class="spec-item">
+                                    <i data-lucide="bath" size="16"></i>
+                                    ${item.Kamar_Mandi || '0'}
+                                </div>
+                                <div class="spec-item">
+                                    <i data-lucide="compass" size="16"></i>
+                                    ${item.Arah_Hadap || '-'}
+                                </div>
+                            </div>
+                            
+                            <p class="description">${item.Deskripsi ? item.Deskripsi.substring(0, 80) + '...' : ''}</p>
+
+                            <div class="footer-price">
+                                <span class="price-label">Listing Price</span>
+                                <span class="price-value">${displayHarga}</span>
+                            </div>
+
+                            <div class="action-buttons">
+                                <a href="detail.html?nama=${encodeURIComponent(item.Nama_Properti)}" class="btn-custom btn-detail">
+                                    <i data-lucide="info" size="14"></i>
+                                    Detail
+                                </a>
+                                <a href="https://wa.me/628123456789?text=Halo, tanya hunian ${item.Nama_Properti}" class="btn-custom btn-wa" target="_blank">
+                                    <i data-lucide="message-circle" size="14"></i>
+                                    Chat WA
+                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
-            container.innerHTML += card;
+                </div>`;
         });
+        // Jalankan Lucide Icons setelah render
+        lucide.createIcons();
     }
 
     fetchData();
 </script>
-
 </body>
 </html>

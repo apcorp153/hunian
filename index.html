@@ -77,7 +77,9 @@
                             <p class="text-muted small"><i class="bi bi-geo-alt"></i> ${item.Lokasi}</p>
                             <p class="price-tag">${item.Harga}</p>
                             <p class="card-text text-secondary small">${item.Deskripsi.substring(0, 100)}...</p>
-                            <div class="d-grid mt-3">
+                            
+                            <div class="d-grid gap-2 mt-3">
+                                <a href="detail.html?nama=${encodeURIComponent(item.Nama_Properti)}" class="btn btn-outline-primary btn-sm">Detail Properti</a>
                                 <a href="https://wa.me/628123456789?text=Halo, saya tertarik dengan ${item.Nama_Properti}" class="btn btn-wa" target="_blank">Tanya via WhatsApp</a>
                             </div>
                         </div>

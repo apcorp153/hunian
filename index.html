@@ -27,19 +27,18 @@
         .hero {
             background: var(--primary-blue);
             color: white;
-            padding: 100px 0 160px 0; /* Jarak atas bawah diperlebar */
+            padding: 80px 0 140px 0;
             text-align: center;
             border-radius: 0 0 50px 50px;
         }
 
         /* Container Card - Efek Floating */
         .main-container {
-            margin-top: -100px; /* Card naik ke area hero */
+            margin-top: -80px;
             z-index: 10;
             position: relative;
         }
 
-        /* Card Styling Sesuai TXT */
         .card-custom {
             background: white;
             border-radius: 24px;
@@ -100,7 +99,6 @@
             -webkit-box-orient: vertical;
         }
 
-        /* Row Spek */
         .specs {
             display: flex;
             justify-content: space-between;
@@ -152,10 +150,10 @@
 
         .btn-custom {
             flex: 1;
-            padding: 14px;
+            padding: 12px;
             border-radius: 14px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -177,7 +175,7 @@
         <h1 class="fw-bold display-4">Hunian153</h1>
         <p class="fs-5 opacity-75">Spesialis Properti Hunian Semarang Timur</p>
         <a href="map.html" class="btn btn-light rounded-pill px-4 fw-bold mt-2">
-            <i class="bi bi-map"></i> Lihat di Peta
+            <i data-lucide="map" size="18" style="vertical-align: middle; margin-right: 5px;"></i> Lihat di Peta
         </a>
     </div>
 </div>
@@ -185,31 +183,39 @@
 <div class="container main-container">
     <div id="catalog" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <div class="col-12 text-center py-5" id="loading">
-            <div class="spinner-border text-light" style="width: 3rem; height: 3rem;" role="status"></div>
-            <p class="text-white mt-3">Sedang memuat hunian impian...</p>
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+            <p class="text-muted mt-3">Sedang memuat hunian impian...</p>
         </div>
     </div>
 </div>
 
 <script>
+    // URL API Lu
     const API_URL = "https://script.google.com/macros/s/AKfycbzCrNX6mtDRz_IBqCXhwWx_YKZTrYgIILx_mGyWEKFZckzTls58MRgjh2yE42m3ZDdg/exec";
 
     async function fetchData() {
         try {
             const response = await fetch(API_URL);
+            if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             renderData(data);
         } catch (e) {
-            console.error(e);
-            document.getElementById('loading').innerHTML = `<p class="text-white">Gagal mengambil data. Cek koneksi.</p>`;
+            console.error("Fetch error:", e);
+            const loader = document.getElementById('loading');
+            if (loader) {
+                loader.innerHTML = `<p class="text-danger">Gagal mengambil data. Pastikan Google Script sudah di-deploy sebagai 'Anyone'.</p>`;
+            }
         }
     }
 
     function renderData(data) {
         const container = document.getElementById('catalog');
-        container.innerHTML = ''; // Hapus loading
+        if (!container) return; // Pelindung jika element catalog tidak ditemukan
+
+        container.innerHTML = ''; // Hapus isi loading
         
         data.forEach(item => {
+            // Logika Harga
             const hargaJual = item.Harga_Jual ? "Rp " + parseInt(item.Harga_Jual).toLocaleString('id-ID') : "";
             const hargaSewa = item.Harga_Sewa ? "Rp " + parseInt(item.Harga_Sewa).toLocaleString('id-ID') : "";
             const displayHarga = hargaJual || hargaSewa || item.Harga || "Hubungi Kami";
@@ -223,7 +229,7 @@
                         </div>
 
                         <div class="content">
-                            <h2 class="title">${item.Nama_Properti}</h2>
+                            <h2 class="title">${item.Nama_Properti || 'Tanpa Nama'}</h2>
                             
                             <div class="specs">
                                 <div class="spec-item"><i data-lucide="maximize" size="18"></i>${item.Luas_Tanah || '-'}m²</div>
@@ -233,7 +239,7 @@
                                 <div class="spec-item"><i data-lucide="compass" size="18"></i>${item.Arah_Hadap || '-'}</div>
                             </div>
                             
-                            <p class="description">${item.Deskripsi ? item.Deskripsi.substring(0, 80) + '...' : 'Hunian strategis siap huni.'}</p>
+                            <p class="description">${item.Deskripsi ? item.Deskripsi.substring(0, 80) + '...' : 'Hunian strategis siap huni di lokasi premium.'}</p>
 
                             <div class="footer-price">
                                 <span class="price-label">Harga Penawaran</span>
@@ -252,9 +258,14 @@
                     </div>
                 </div>`;
         });
-        lucide.createIcons();
+        
+        // Render ulang icon Lucide setelah HTML dimasukkan
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
     }
 
+    // Jalankan
     fetchData();
 </script>
 </body>

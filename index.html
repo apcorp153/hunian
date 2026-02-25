@@ -162,6 +162,16 @@
             transition: 0.2s;
         }
 
+        .location-wrapper {
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        
+        .title {
+            height: auto !important; /* Biar flexibel karena ada lokasi di bawahnya */
+            -webkit-line-clamp: 1 !important; /* Nama properti cukup 1 baris saja */
+        }
+
         .btn-detail { background: var(--detail-blue); color: white; }
         .btn-wa { background: var(--whatsapp-green); color: white; }
         .btn-custom:hover { opacity: 0.9; color: white; transform: scale(1.02); }
@@ -219,47 +229,66 @@
     if (loader) loader.style.display = 'none';
     if (!container) return;
 
-    // PENGAMAN: Cek apakah data benar-benar sebuah Array
     if (!Array.isArray(data)) {
-        console.error("Data bukan array:", data);
-        container.innerHTML = `
-            <div class="col-12 text-center py-5">
-                <p class="text-danger">Format data salah. Pastikan Google Script mengembalikan Array.</p>
-                <code class="small text-muted">${JSON.stringify(data)}</code>
-            </div>`;
+        container.innerHTML = `<div class="col-12 text-center text-white">Data gagal dimuat.</div>`;
         return;
     }
 
     container.innerHTML = ''; 
     
     data.forEach(item => {
-        // ... sisa kode looping lu tetap sama ...
-        const hargaJual = item.Harga_Jual ? "Rp " + parseInt(item.Harga_Jual).toLocaleString('id-ID') : "";
-        const hargaSewa = item.Harga_Sewa ? "Rp " + parseInt(item.Harga_Sewa).toLocaleString('id-ID') : "";
-        const displayHarga = hargaJual || hargaSewa || item.Harga || "Hubungi Kami";
+        // Pembersihan harga agar tidak NaN
+        const cleanPrice = (val) => {
+            if (!val) return 0;
+            return parseInt(val.toString().replace(/[^0-9]/g, '')) || 0;
+        };
+
+        const hJual = cleanPrice(item.Harga_Jual);
+        const hSewa = cleanPrice(item.Harga_Sewa);
+        const displayHarga = (hJual > 0) ? "Rp " + hJual.toLocaleString('id-ID') : 
+                             (hSewa > 0) ? "Rp " + hSewa.toLocaleString('id-ID') + "/Bln" : 
+                             (item.Harga || "Hubungi Kami");
 
         container.innerHTML += `
             <div class="col">
                 <div class="card-custom">
                     <div class="image-container">
-                        <div class="status-tag">${item.Status || 'DIJUAL'}</div>
-                        <img src="${item.Link_Foto}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop'">
+                        <div class="status-tag">${item.Status || 'TERSEDIA'}</div>
+                        <img src="${item.Link_Foto}" alt="${item.Nama_Properti}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop'">
                     </div>
+
                     <div class="content">
-                        <h2 class="title">${item.Nama_Properti || 'Tanpa Nama'}</h2>
+                        <h2 class="title mb-1">${item.Nama_Properti || 'Properti Baru'}</h2>
+                        
+                        <div class="location-wrapper mb-3 d-flex align-items-center text-muted small">
+                            <i data-lucide="map-pin" size="14" class="me-1 text-danger"></i>
+                            <span>${item.Kecamatan || 'Semarang'}</span>
+                        </div>
+                        
                         <div class="specs">
                             <div class="spec-item"><i data-lucide="maximize" size="18"></i>${item.Luas_Tanah || '-'}m²</div>
                             <div class="spec-item"><i data-lucide="home" size="18"></i>${item.Luas_Bangunan || '-'}m²</div>
                             <div class="spec-item"><i data-lucide="bed-double" size="18"></i>${item.Kamar_Tidur || '0'}</div>
                             <div class="spec-item"><i data-lucide="bath" size="18"></i>${item.Kamar_Mandi || '0'}</div>
+                            <div class="spec-item"><i data-lucide="compass" size="18"></i>${item.Arah_Hadap || '-'}</div>
                         </div>
+                        
+                        <p class="description">
+                            ${item.Deskripsi ? item.Deskripsi.substring(0, 85) + '...' : 'Hunian strategis di wilayah pilihan, akses mudah dan lingkungan nyaman.'}
+                        </p>
+
                         <div class="footer-price">
                             <span class="price-label">Harga Penawaran</span>
                             <span class="price-value">${displayHarga}</span>
                         </div>
+
                         <div class="action-buttons">
-                            <a href="detail.html?nama=${encodeURIComponent(item.Nama_Properti)}" class="btn-custom btn-detail">Detail</a>
-                            <a href="https://wa.me/628123456789" class="btn-custom btn-wa">WhatsApp</a>
+                            <a href="detail.html?nama=${encodeURIComponent(item.Nama_Properti)}" class="btn-custom btn-detail">
+                                Detail
+                            </a>
+                            <a href="https://wa.me/628123456789?text=Halo, saya tertarik dengan ${item.Nama_Properti}" class="btn-custom btn-wa" target="_blank">
+                                WhatsApp
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -268,6 +297,7 @@
     
     if (typeof lucide !== 'undefined') lucide.createIcons();
 }
+    
     // Jalankan
     fetchData();
 </script>
